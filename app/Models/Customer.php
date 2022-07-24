@@ -1,29 +1,28 @@
 <?php
-
 namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-class Customer extends Model
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
+class Customer extends Model  implements Searchable
 {
-    use HasFactory;
-
-   
-    protected $guarded = ['id'];
-
-    public static $rules = ['title' =>'required|alpha|max:3',
-                    'lname'=>'required',
-                    'fname'=>'required',
-                    'addressline'=>'required',
-                    'phone'=>'numeric|min:3',
-                    'town'=>'required',
-                    'zipcode'=>'required'];
-
-    public static $messages = [
-            'required' => 'Ang :attribute field na ito ay kailangan',
-            'min' => 'masyadong maigsi ang :attribute',
-             'alpha' => 'pawang mga letra lamang',
-            'fname.required' => 'pakibigay lang ang inyong pangalan'
-        ];
+    public $table = 'customers';
+    public $primaryKey = 'customer_id';
+    public $timestamps = false;
+    protected $fillable = ['fname','lname',
+        'title','addressline','town','zipcode',
+        'phone','email','id'
+    ];
+     public function orders(){
+        return $this->hasMany('App\Models\Order','customer_id');
+    }
+    public function getSearchResult(): SearchResult
+     {
+        $url = route('customer.show', $this->customer_id);
+         return new \Spatie\Searchable\SearchResult(
+            $this,
+            // concat($this->lname + $this->fname),
+            $this->lname,
+            $url
+            );
+     }
 }

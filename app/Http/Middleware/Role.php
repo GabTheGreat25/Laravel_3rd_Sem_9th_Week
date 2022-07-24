@@ -1,34 +1,33 @@
 <?php
-
 namespace App\Http\Middleware;
-
 use Closure;
-use Illuminate\Http\Request;
 use Auth;
-
 class Role
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$roles)
+    public function handle($request, Closure $next, ...$roles)
     {
-        // return $next($request);
-
-         // dd($roles);
-        // if(Auth::user()->role === 'admin')
-        //     return $next($request);
-
+        // $user = Auth::user();
+        // if( $user->isAdmin){
+        //         return $next($request);x
+        //     }
+        // dd($user->role);
+        // dd($roles);
+        if(! Auth::user())
+            return redirect()->back();
+        // dd(Auth::user()->role);
         foreach($roles as $role) {
-            // dd($role);
-        if(Auth::user()->role === $role)
+            if(Auth::user()->role === $role){
+                // dump($role);
                 return $next($request);
+             }
         }
-
-        return redirect()->back()->with('error','You have not admin access');
+        return redirect()->back(); 
     }
 }

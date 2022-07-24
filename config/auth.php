@@ -38,8 +38,8 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            // 'provider' => 'users',
-            'provider' => 'listeners',
+            'provider' => 'users',
+            // 'provider' => 'listeners',
         ],
     ],
 
@@ -60,16 +60,16 @@ return [
     |
     */
 
-    'providers' => [
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\User::class,
-        // ],
-
-         'listeners' => [
+        'providers' => [    
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Listener::class,
+            'model' => App\Models\User::class,
         ],
+
+        //  'listeners' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Listener::class,
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',

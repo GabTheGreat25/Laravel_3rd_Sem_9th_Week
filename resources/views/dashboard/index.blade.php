@@ -1,34 +1,45 @@
-@extends('layouts.base')
-@section('body')
+@extends('layouts.master')
+@section('content')
+<div class="container">
+    {{-- {{dd($customerChart)}} --}}
+  <div class="row">
+    <div  class="col-sm-6 col-md-6">
+        <h2>Demographics</h2>
+    @if(empty($customerChart))
+        <div ></div>
+    @else
+          <div>{!! $customerChart->container() !!}</div>
+        {!! $customerChart->script() !!}
+     @endif   
+    </div>
 <div  class="col-sm-6 col-md-6">
-    <h2>Album chart</h2>
-    @if(empty($genreChart))
-        <div id="app2"></div>
+        <h2>TownDemographics</h2>
+    @if(empty($townChart))
+        <div ></div>
     @else
-    
-        <div class="row">
-            {!! $genreChart->container() !!}
-        </div>
-       
-             {!! $genreChart->script() !!}
-        
-       
+          <div>{!! $townChart->container() !!}</div>
+        {!! $townChart->script() !!}
      @endif   
-</div>
-
-   <div  class="col-sm-6 col-md-6">
-    <h2>listener chart</h2>
-    @if(empty($listenerChart))
-        <div id="app2"></div>
+    </div>
+  </div>
+<div class="row">
+ <div  class="col-sm-6 col-md-6">
+        <h2>Sales Chart</h2>
+    @if(empty($salesChart))
+        <div ></div>
     @else
-    
-        <div class="row">
-            {!! $listenerChart->container() !!}
-        </div>
-       
-             {!! $listenerChart->script() !!}
-        
+          <div>{!! $salesChart->container() !!}</div>
+        {!! $salesChart->script() !!}
      @endif   
+    </div>
+    <div  class="col-sm-6 col-md-6">
+        <h2>Product Chart</h2>
+    @if(empty($itemChart))
+        <div ></div>
+    @else
+          <div>{!! $itemChart->container() !!}</div>
+        {!! $itemChart->script() !!}
+     @endif   
+    </div>
 </div>
-
 @endsection

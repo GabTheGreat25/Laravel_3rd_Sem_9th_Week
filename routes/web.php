@@ -65,39 +65,39 @@ Route::group(['middleware' => ['auth']], function () {
             'as' => 'Item.index'
     ]);
 
-    Route::get('/signup', [
-        'uses' => 'userController@getSignup',
-        'as' => 'user.signup',
-        'middleware' => 'guest'
-    ]);
-    Route::post('/signup', [
-        'uses' => 'userController@postSignup',
-        'as' => 'user.signup1',
-        'middleware' => 'guest'
-    ]);
+    // Route::get('/signup', [
+    //     'uses' => 'userController@getSignup',
+    //     'as' => 'user.signup',
+    //     'middleware' => 'guest'
+    // ]);
+    // Route::post('/signup', [
+    //     'uses' => 'userController@postSignup',
+    //     'as' => 'user.signup1',
+    //     'middleware' => 'guest'
+    // ]);
 
-    Route::get('profile', [
-        'uses' => 'UserController@getProfile',
-        'as' => 'user.profile',
-    ]);
+    // Route::get('profile', [
+    //     'uses' => 'UserController@getProfile',
+    //     'as' => 'user.profile',
+    // ]);
 
-    Route::get('/signin', [
-        'uses' => 'userController@getSignin',
-        'as' => 'user.signin;'
+    // Route::get('/signin', [
+    //     'uses' => 'userController@getSignin',
+    //     'as' => 'user.signin;'
         
-    ]);
+    // ]);
 
-    Route::post('/signin', [
-        'uses' => 'userController@postSignin',
-        'as' => 'user.signin1'
+    // Route::post('/signin', [
+    //     'uses' => 'userController@postSignin',
+    //     'as' => 'user.signin1'
         
-    ]);
+    // ]);
 
-    Route::get('logout', [
-        'uses' => 'userController@getLogout',
-        'as' => 'user.logout'
+    // Route::get('logout', [
+    //     'uses' => 'userController@getLogout',
+    //     'as' => 'user.logout'
         
-    ]);
+    // ]);
         
 
     Route::get('shopping-cart', [
@@ -160,7 +160,8 @@ Route::get('/artists', [
       'uses' => 'ArtistController@getArtists',
        'as' => 'getArtists'
     ]);
-Route::get('/search/{search?}',['uses' => 'SearchController@search','as' => 'search'] );
+// Route::get('/search/{search?}',['uses' => 'SearchController@search','as' => 'search'] );
+Route::post('/search',['uses' => 'SearchController@search','as' => 'search'] );
 Route::resource('artist', 'ArtistController')->except(['index', 'show']);
 Route::resource('album', 'AlbumController')->except(['index', 'show']);
 
@@ -248,3 +249,79 @@ Route::post('/contact',['uses' => 'MailController@contact','as' => 'contact']);
  });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/', [
+      'uses' => 'ProductController@getIndex',
+       'as' => 'product.index'
+    ]);
+
+// Route::get('/customer/{id}', [
+//       'uses' => 'CustomerController@show',
+//        'as' => 'customer.show'
+//     ]);
+Route::group(['prefix' => 'user'], function(){
+ Route::group(['middleware' => 'guest'], function() {
+        Route::get('signup', [
+        'uses' => 'userController@getSignup',
+        'as' => 'user.signups',
+            ]);
+        Route::post('signup', [
+                'uses' => 'userController@postSignup',
+                'as' => 'user.signup',
+            ]);
+        Route::get('signin', [
+                'uses' => 'userController@getSignin',
+                'as' => 'user.signins',
+             ]);
+     Route::post('signin', [
+                'uses' => 'LoginController@postSignin',
+                'as' => 'user.signin',
+            ]);
+    });
+    Route::group(['middleware' => 'role:customer'], function() {
+       Route::get('profile', [
+        'uses' => 'UserController@getProfile',
+        'as' => 'user.profile',
+     ]);
+    });
+});
+Route::get('add-to-cart/{id}',[
+        'uses' => 'ProductController@getAddToCart',
+        'as' => 'product.addToCart'
+    ]);
+Route::get('shopping-cart', [
+    'uses' => 'ProductController@getCart',
+    'as' => 'product.shoppingCart',
+    'middleware' =>'role:customer'
+]);
+ Route::get('checkout',[
+        'uses' => 'productController@postCheckout',
+        'as' => 'checkout',
+        'middleware' =>'role:customer' //lagay sa reduce & remove
+    ]);
+ Route::get('reduce/{id}',[
+        'uses' => 'productController@getReduceByOne',
+        'as' => 'product.reduceByOne'
+    ]);
+     Route::get('remove/{id}',[
+        'uses'=>'productController@getRemoveItem',
+        'as' => 'product.remove'
+    ]);
+Route::get('/dashboard',['uses'=>'DashboardController@index','as'=>'dashboard.index'])->middleware('role:admin');
+Route::group(['middleware' => 'role:admin,encoder'], function() {
+    Route::post('/import', 'ItemController@import')->name('item-import');
+    Route::get('/export',[
+        'uses'=>'ItemController@export',
+        'as' => 'item.export'
+    ]);
+    Route::get('/get-item',[ 'uses'=>'ItemController@getItem','as' => 'item.getItem']);
+    Route::resource('item', 'ItemController');
+});
+ Route::get('logout',[
+  'uses' => 'LoginController@logout',
+  'as' => 'user.logout',
+  'middleware'=>'auth'
+ ]);
+Route::fallback(function () {
+    return redirect()->back();
+});
