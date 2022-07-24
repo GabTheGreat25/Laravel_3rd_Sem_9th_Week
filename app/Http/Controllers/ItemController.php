@@ -13,6 +13,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use Yajra\Datatables\Datatables;
 use App\Rules\ItemRule;
+use Maatwebsite\Excel\Concerns\WithStyles; 
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
 class ItemController extends Controller
 {
     public function index()
@@ -27,9 +30,10 @@ class ItemController extends Controller
     public function getItem(){
         // $items = Item::select('item_id','description','sell_price','cost_price');
         // ->orderBy('item_id','desc');
-        $items = Item::with('orders')->get();
-        dd($items);
-        // return Datatables::of($items)->make(true);
+        // $items = Item::with('item')->get();
+        $items = Item::all();
+        // dd($items);
+        return Datatables::of($items)->make(true);
     }
     public function create()
     {
@@ -82,7 +86,8 @@ class ItemController extends Controller
     public function export() 
     {
         // return Excel::download(new ItemsExport, 'item.xlsx');
-         // return Excel::download(new ItemTableExport, 'item-table.xlsx');
-        return Excel::download(new CustomerExport, 'item-table.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+         // return Excel::download(new ItemTableExport, 'item-table.excel');
+        // return Excel::download(new CustomerExport, 'customer-table.pdf', 
+        return Excel::download(new ItemTableExport, 'item-table_'.now().'.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 }

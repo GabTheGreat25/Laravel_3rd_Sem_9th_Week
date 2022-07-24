@@ -3,7 +3,8 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
-
+use App\Models\Item;
+use App\Models\Customer;
 class ItemsExport implements FromCollection
 {
     /**
@@ -11,6 +12,6 @@ class ItemsExport implements FromCollection
     */
     public function collection() //php artisan make:export ItemsExport
     {
-        //
+        return Customer::all();
     }
 }

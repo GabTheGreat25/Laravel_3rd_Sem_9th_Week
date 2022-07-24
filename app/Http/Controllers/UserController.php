@@ -40,7 +40,8 @@ class UserController extends Controller
     }
  public function getProfile(){
         $customer = Customer::where('id',Auth::id())->first();
-        $orders = Order::with('customer','items')->where('customer_id',$customer->customer_id)->get();
+        $orders = Order::with('customer','items')->where('customer_id',$customer->id)->get();
+        // dd($customer, $orders);
         return view('user.profile',compact('orders'));
     }
     public function getLogout(){
